@@ -1,0 +1,36 @@
+# run docker-copmpose up --build -d to create & run 3 instances of app
+# run docker ps to check 3 instances of images running
+# run docker logs [CONTAINER_ID] to see the logs
+# e.g. App1 is listening on port 3000
+#      Request reserved by node App1
+
+version: '3' # version of Docker compose file format
+             # Version 3 is commonly used for compatibility with newer Docker features.
+services: # defines different services that will be created
+          # Each service corresponds to a separate container.
+  # app1, app2, app3 = 3 instances of same app from the same Dockerflie
+  app1: 
+    build: . # The container is built using the Dockerfile located in the current directory (.).
+    environment:
+      - APP_NAME=App1 # variables to differentiate between 3 instances 
+                      # accessible in node.js app via process.env.APP_NAME
+    ports:
+      - "3001:3000" # inside the container, the application will run on port 3000
+                    # and then map port 3001 on the host machine (localhost) to port 3000 inside the container
+                    # since you can't run 3 instances in one port, since one port can only run one application
+                    # when you access localhost:3001 on your machine, 
+                    # when you open localhost:3001, the traffic will be routed to port 3000 of the app1 container. 
+
+  app2:
+    build: .
+    environment:
+      - APP_NAME=App2
+    ports:
+      - "3002:3000"
+
+  app3:
+    build: .
+    environment:
+      - APP_NAME=App3
+    ports:
+      - "3003:3000"
